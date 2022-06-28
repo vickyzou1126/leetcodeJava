@@ -213,4 +213,99 @@ public class Problem {
     	}
     	java.util.Arrays.sort(nums);
     }
+
+    // 33. Search in Rotated Sorted Array
+    
+    public int search(int[] nums, int target) {
+    	int len = nums.length;
+    	if (len==1) {
+    		return nums[0]==target ? 0 : -1;
+    	}
+    	
+    	if (nums[0]<nums[len-1]) {
+    		return search(nums, target, 0,len-1);
+    	}else {
+    		int startIndex=0;
+    		int endIndex=len-1;
+    		while(startIndex <= endIndex) {
+    			int mid = startIndex + (endIndex - startIndex)/2;
+    			if(nums[mid]==target) return mid;
+          
+                if ((mid==0 || nums[mid] > nums[mid-1]) && (mid==len-1 || nums[mid] > nums[mid+1]))
+                {
+                    if (target > nums[mid]) return -1;
+    				if (nums[0] > target) {
+    					return search(nums, target, mid+1, len-1);
+    				}
+    				return search(nums, target, 0, mid-1);
+                }else if (nums[mid] >nums[0]) {
+    				startIndex++;
+    			}else{
+                    endIndex--;
+                }
+    		}
+    	}
+    	
+        return -1;
+        
+    }
+    
+    private int search(int[] nums, int target, int startIndex, int endIndex) {
+        if (startIndex>endIndex) return -1;
+    	int mid = startIndex + (endIndex-startIndex)/2;
+    	if (nums[mid]==target) return mid;
+    	else if (nums[mid]<target) {
+    		//if (mid+!==startIndex) return -1;
+    		return search(nums, target, mid+1, endIndex);
+    	}
+    	else {
+    		//if (endIndex==mid) return -1;
+    		return search(nums, target, startIndex, mid-1);
+    	}
+    }
+
+    // 34. Find First and Last Position of Element in Sorted Array
+    public int[] searchRange(int[] nums, int target) {
+    	int[] res = new int[] {-1, -1};
+        int len = nums.length;
+        if(len==0 || target< nums[0]) 
+        	return res;
+        
+        var index = search(nums, target, 0, len-1);
+        
+        if (index==-1) return res;
+        int leftIndex=index;
+        int rightIndex=index;
+        while (leftIndex>=0 && nums[leftIndex] == target) {
+        	leftIndex--;
+        }
+        
+        while (rightIndex <=len-1 &&nums[rightIndex] == target) {
+        	rightIndex++;
+        }
+        return new int[] {leftIndex+1, rightIndex-1};
+    }
+
+    // 35. Search Insert Position
+    public int searchInsert(int[] nums, int target) {
+    	if (nums[0]>target) return 0;
+        int len=nums.length;
+    	int startIndex=0;
+		int endIndex=len-1;
+		while(startIndex <= endIndex) {
+			int mid = startIndex + (endIndex - startIndex)/2;
+			if(nums[mid]==target) return mid;
+            
+			if ((mid==0 || nums[mid] <target) && (mid==len-1 || nums[mid+1] > target))
+            {
+                return mid+1;
+            }else if (nums[mid] > target) {
+            	endIndex--;
+				
+			}else{
+				startIndex++;
+            }
+		}
+		return -1;
+    }
 }
