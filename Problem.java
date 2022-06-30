@@ -2,13 +2,16 @@ package Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Problem {
 	public static void main(String[] args) {
-		nextPermutation(new int[] {1,3,2});
+		
 	}
 	
 	// 1. Two Sum
@@ -308,4 +311,139 @@ public class Problem {
 		}
 		return -1;
     }
+
+    // 36. Valid Sudoku
+	public boolean isValidSudoku(char[][] board) {
+		Hashtable<Integer, List<String>> dictionary = new Hashtable<Integer, List<String>>();
+		Hashtable<Integer, List<String>> culdictionary = new Hashtable<Integer, List<String>>();
+		
+		for(int i=0;i<9;i++) {
+			HashSet set = new HashSet();
+			for(int j=0;j<9;j++) {
+				if(board[i][j]!='.') {
+					if(!set.add(board[i][j])) {
+						return false;
+					}
+					
+					var block = (i/3)*3+(j/3);
+					if(!dictionary.containsKey(block)) {
+						dictionary.put(block, new ArrayList<String>());
+					}
+					if(dictionary.get(block).contains(Character.toString(board[i][j]))) {
+						return false;
+					}else {
+						var list = dictionary.get(block);
+						list.add(Character.toString(board[i][j]));
+						dictionary.replace(block, list);
+                        
+					}
+					if(!culdictionary.containsKey(j)) {
+						culdictionary.put(j, new ArrayList<String>());
+					}
+					if(culdictionary.get(j).contains(Character.toString(board[i][j]))) {
+						return false;
+					}else {
+						var list = culdictionary.get(j);
+						list.add(Character.toString(board[i][j]));
+						culdictionary.replace(j, list);
+					}
+				}
+			}
+		}
+		
+		return true;
+			        
+    }
+
+	// 39. Combination Sum
+
+	// dp
+	public static List<List<Integer>> combinationSum_1(int[] candidates, int target) {
+		java.util.Arrays.sort(candidates);
+        if (target < candidates[0])
+		{
+			return new ArrayList<>();
+		}
+		var intList = Arrays.stream(candidates).boxed().toList();
+
+		Hashtable<Integer, List<List<Integer>>> dictionary = new Hashtable<Integer, List<List<Integer>>>();
+		
+		int value = candidates[0];
+		
+		while(value <= target) {
+			var set = new HashSet<String>();
+			var temp = new ArrayList<List<Integer>>();
+			if (intList.contains(value)) {
+				temp.add(Arrays.asList(value));
+			}
+			for(int i=candidates[0]; i<=value-candidates[0];i++) {
+				var list1 = dictionary.get(i);
+				var list2 = dictionary.get(value-i);
+				for (var l1 : list1) {
+					for(var l2: list2) {
+						var tempL= new ArrayList<Integer>();
+						tempL.addAll(l1);
+						tempL.addAll(l2);
+						Collections.sort(tempL);
+						if (set.add(tempL.toString())) {
+							temp.add(tempL);
+						}
+						
+					}
+				}
+			}
+			
+			dictionary.put(value, temp);
+            value++;
+		}
+		return dictionary.get(target);
+	}      
+
+	public List<List<Integer>> combinationSum(int[] candidates, int target) {
+		List<List<Integer>> list = new ArrayList<List<Integer>>();
+		combinationSum(candidates, target, 0, 0, new ArrayList(), list);
+		return list;
+	}
+	
+	private void combinationSum(int[] candidates, int target, int sum, int startIndex, List<Integer> temp, List<List<Integer>> list) {
+		if(sum>target) return;
+		if(sum==target) {
+			list.add(new ArrayList(temp));
+			return;
+		}
+		
+		for(int i=startIndex; i<candidates.length;i++) {
+			temp.add(candidates[i]);
+			combinationSum(candidates, target, sum+candidates[i], i, temp, list);
+			temp.remove(temp.size()-1);
+		}
+	}
+
+	// 40. Combination Sum II
+	public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+		java.util.Arrays.sort(candidates);
+		List<List<Integer>> list = new ArrayList<List<Integer>>();
+		combinationSum2(candidates, target, 0, 0, new ArrayList(), list);
+		return list; 
+    }
+	
+	private void combinationSum2(int[] candidates, int target, int sum, int startIndex, List<Integer> temp, List<List<Integer>> list) {
+		if(sum>target) return;
+		if(sum==target) {
+			list.add(new ArrayList(temp));
+			return;
+		}
+		
+		for(int i=startIndex; i<candidates.length;i++) {
+			if(candidates[i]>target) return;
+            
+			temp.add(candidates[i]);
+			combinationSum2(candidates, target, sum+candidates[i], i+1, temp, list);
+			temp.remove(temp.size()-1);
+            while(i<candidates.length-1 && candidates[i]==candidates[i+1]){
+                i++;
+            }
+		}
+	}
+
 }
