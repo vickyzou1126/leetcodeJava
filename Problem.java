@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Problem {
 	public static void main(String[] args) {
@@ -446,4 +445,20 @@ public class Problem {
 		}
 	}
 
+	// 45. Jump Game II
+	public int jump(int[] nums) {
+		int len = nums.length;
+        int[] dp = new int[len];
+        
+        for(int i=1;i<len;i++) {
+        	dp[i] = Integer.MAX_VALUE;
+        }
+        
+        for(int i=0;i<len;i++) {
+        	for(int j=1;j<=nums[i] && i+j<len;j++) {
+        		dp[i+j] = Math.min(dp[i+j], dp[i]+1);
+        	}
+        }
+        return dp[len-1];
+    }
 }
