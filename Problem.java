@@ -461,4 +461,92 @@ public class Problem {
         }
         return dp[len-1];
     }
+
+	// 46. Permutations
+	public List<List<Integer>> permute(int[] nums) {
+		List<List<Integer>> list = new ArrayList<List<Integer>>();
+		permute(nums, nums.length, list, new ArrayList());
+		return list;
+    }
+	
+	private void permute(int[] nums, int len, List<List<Integer>> list, List<Integer> temp) {
+		if (temp.size() == len) {
+			list.add(new ArrayList(temp));
+			return;
+		}
+		for(int i=0;i<len;i++) {
+			if(!temp.contains(nums[i])){
+				temp.add(nums[i]);
+				permute(nums, len, list,temp);
+				temp.remove(temp.size()-1);
+			}
+		}
+	}
+
+	// 47. Permutations II
+	public List<List<Integer>> permuteUnique(int[] nums) {
+		List<List<Integer>> list = new ArrayList<List<Integer>>();
+		HashSet<String> set = new HashSet();
+		permute(nums, nums.length, set, new ArrayList());
+		for(var str : set) {
+			var temp = new ArrayList<Integer>();
+			for(var s : new ArrayList<String>(Arrays.asList(str.split(",")))) {
+				temp.add(Integer. parseInt(s));
+			}
+			list.add(temp);
+		}
+		return list;
+    }
+	
+	private void permute(int[] nums, int len, HashSet<String> set, List<Integer> temp) {
+		if (temp.size() == len) {
+			var str="";
+			for(var i : temp) {
+				str+=nums[i]+",";
+			}
+			set.add(str);
+			return;
+		}
+		for(int i=0;i<len;i++) {
+			if(!temp.contains(i)){
+				temp.add(i);
+				permute(nums, len, set,temp);
+				temp.remove(temp.size()-1);
+			}
+		}
+	}
+
+	// 48. Rotate Image
+	
+	//49. Group Anagrams
+    public List<List<String>> groupAnagrams(String[] strs) {
+    	List<List<String>> res = new ArrayList();
+    	Hashtable<String, List<String>> dic = new  Hashtable<String, List<String>>();
+    	for(var s : strs) {
+    		var sorteds = sortString(s);
+    		var value = new ArrayList<String>();
+    		if (!dic.containsKey(sorteds)) {
+				dic.put(sorteds, new ArrayList());
+			}
+    		value = (ArrayList<String>) dic.get(sorteds);
+    		value.add(s);
+    		dic.replace(sorteds, value);
+    	}
+    	for(var s : dic.values()) {
+    		res.add(s);
+    	}
+    	return res;
+    }
+    
+    private String sortString(String inputString)
+    {
+        // Converting input string to character array
+        char tempArray[] = inputString.toCharArray();
+ 
+        // Sorting temp array using
+        Arrays.sort(tempArray);
+ 
+        // Returning new sorted string
+        return new String(tempArray);
+    }
 }
