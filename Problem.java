@@ -3,6 +3,7 @@ package Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -10,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class Problem {
 	public static void main(String[] args) {
-		
 	}
 	
 	// 1. Two Sum
@@ -548,5 +548,159 @@ public class Problem {
  
         // Returning new sorted string
         return new String(tempArray);
+    }
+
+    // 53. Maximum Subarray
+    public int maxSubArray(int[] nums) {
+    	int tempSum = nums[0];
+        int res = tempSum;
+        for(int i=1;i<nums.length;i++) {
+            if(nums[i]>0){
+                if(tempSum<0 || tempSum+nums[i]<=0){
+                    tempSum=nums[i];
+                }
+                else{
+                     tempSum+=nums[i];
+                }
+            }else{
+                res = Math.max(res, tempSum);
+                if(tempSum+nums[i]>0){
+                    tempSum+=nums[i];
+                } else{
+                    tempSum = nums[i];
+                }
+            }
+        }
+        
+        return Math.max(res, tempSum);
+    }
+
+    // 54. Spiral Matrix
+    
+    // 55. Jump Game
+    public boolean canJump(int[] nums) {
+    	int len = nums.length;
+        boolean[] dp = new boolean[len];
+        dp[0]=true;
+        for(int i=0;i<len;i++) {
+        	if(dp[i]) {
+        		for(int j=1;j<=nums[i] && i+j<len;j++) {
+        			dp[i+j]=true;
+        			if (i+j==len-1) return true;
+        		}
+        	}
+        }
+        return dp[len-1];
+    }
+    
+    // 56. Merge Intervals
+    public int[][] merge(int[][] intervals) {
+    	int len = intervals.length;
+    	if (len==1) return intervals;
+    	Arrays.sort(intervals, Comparator.comparingDouble(o -> o[0]));
+    	int[][] res = new int[len][2];
+        int low=intervals[0][0];
+        int high = intervals[0][1];
+        int counter=0;
+        for(int i=1;i<len;i++) {
+        	if ((low<=intervals[i][0] && low>= intervals[i][1]) || (intervals[i][0]>= low && intervals[i][0]<=high)) {
+        		low = Math.min(low, intervals[i][0]);
+        		high = Math.max(high, intervals[i][1]);
+        	}else {
+        		res[counter][0]=low;
+        		res[counter][1]=high;
+        		counter++;
+        		low = intervals[i][0];
+        		high=intervals[i][1];
+        	}
+        }
+        res[counter][0]=low;
+		res[counter][1]=high;
+        return Arrays.copyOf(res,counter+1);
+    }
+
+    // 57. Insert Interval
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+    	int len = intervals.length;
+    	if (len==0) return new int[][] {newInterval};
+    	
+    	int[][] newintervals= new int[len+1][2];
+    	for(int i=0;i<len;i++)
+    	{
+    		newintervals[i]=intervals[i];
+    	}
+    	newintervals[len] = newInterval;
+    	
+    	Arrays.sort(newintervals, Comparator.comparingDouble(o -> o[0]));
+    	int[][] res = new int[len+1][2];
+        int low=newintervals[0][0];
+        int high = newintervals[0][1];
+        int counter=0;
+        for(int i=1;i<=len;i++) {
+        	if ((low<=newintervals[i][0] && low>= newintervals[i][1]) || (newintervals[i][0]>= low && newintervals[i][0]<=high)) {
+        		low = Math.min(low, newintervals[i][0]);
+        		high = Math.max(high, newintervals[i][1]);
+        	}else {
+        		res[counter][0]=low;
+        		res[counter][1]=high;
+        		counter++;
+        		low = newintervals[i][0];
+        		high=newintervals[i][1];
+        	}
+        }
+        res[counter][0]=low;
+		res[counter][1]=high;
+        return Arrays.copyOf(res,counter+1);
+    }
+
+    // 59. Spiral Matrix II
+    
+    // 63. Unique Paths II
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+    	if(obstacleGrid[0][0]==1) return 0;
+        int row=obstacleGrid.length;
+    	int col=obstacleGrid[0].length;
+        int[][] dp = new int[row][col];
+        // init
+        dp[0][0] = 1;
+        
+        for(int i=0;i<row;i++) {
+        	for(int j=0;j<col;j++) {
+        		if(obstacleGrid[i][j]!=1) {
+        			if (i>0){
+                        dp[i][j] += dp[i-1][j];
+                    }
+                    if(j>0){
+                        dp[i][j] +=dp[i][j-1];
+                    }
+        		}
+        	}
+        }
+        
+        return dp[row-1][col-1];
+    }
+
+    // 64. Minimum Path Sum -24th
+    public int minPathSum(int[][] grid) {
+    	int row=grid.length;
+    	int col=grid[0].length;
+        int[][] dp = new int[row][col];
+        // init
+        dp[0][0] = grid[0][0];
+        
+        for(int i=0;i<row;i++) {
+        	for(int j=0;j<col;j++) {
+        		if(i==0) {
+        			if (j==0) continue;
+
+                    dp[i][j]=dp[i][j-1]+grid[i][j];
+        		} else if (j==0) {
+                    dp[i][j]=dp[i-1][j]+grid[i][j];
+        		} else {
+        			dp[i][j]=Math.min(dp[i][j-1], dp[i-1][j])+grid[i][j];
+        		}
+        	}
+        }
+        return dp[row-1][col-1];
     }
 }
