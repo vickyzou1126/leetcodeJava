@@ -703,4 +703,24 @@ public class Problem {
         }
         return dp[row-1][col-1];
     }
+
+    // 75. Sort Colors
+    public void sortColors(int[] nums) {
+    	 int low=0;
+         int len=nums.length;
+         int high=len-1;
+         while(low<high) {
+         	if(nums[low] > nums[high]) {
+         		int swap = nums[low];
+         		nums[low]=nums[high];
+         		nums[high]=swap;
+         		
+         	}
+             high--;
+             if(high==low) {
+         			low++;
+         			high=len-1;
+         		}
+         }
+    }
 }
