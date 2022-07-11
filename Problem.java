@@ -680,7 +680,7 @@ public class Problem {
         return dp[row-1][col-1];
     }
 
-    // 64. Minimum Path Sum -24th
+    // 64. Minimum Path Sum
     public int minPathSum(int[][] grid) {
     	int row=grid.length;
     	int col=grid[0].length;
@@ -704,6 +704,80 @@ public class Problem {
         return dp[row-1][col-1];
     }
 
+    // 66. Plus One
+    public int[] plusOne(int[] digits) {
+    	var len = digits.length;
+    	int[] res = new int[len+1];
+    	int val = digits[len-1]+1;
+    	var carry = val>=10;
+    	digits[len-1] = val%10;
+    	res[len]=digits[len-1];
+    	for(int i=len-2;i>=0;i--) {
+    		if(carry) {
+    			digits[i]= digits[i]+1;
+    			carry = digits[i]>=10;
+    	    	digits[i] = digits[i]%10;
+    		}
+    		res[i+1]=digits[i];
+    	}
+    	if(carry) {
+            res[0]=1;
+    		return res;
+    	}
+    	
+        return digits;
+    }
+    
+    // 73. Set Matrix Zeroes
+    public void setZeroes(int[][] matrix) {
+    	boolean[][] visited = new boolean[matrix.length][matrix[0].length];
+    	
+    	for(int i=0;i<matrix.length;i++) {
+    		for(int j=0;j<matrix[0].length;j++) {
+    			if(matrix[i][j]==0 && !visited[i][j]) {
+    				for(int k=0;k<matrix[0].length;k++) {
+    					if(matrix[i][k]!=0) {
+    						matrix[i][k]=0;
+        					visited[i][k]=true;
+    					}
+    				}
+    				for(int l=0;l<matrix.length;l++) {
+    					if(matrix[l][j]!=0) {
+    						matrix[l][j]=0;
+        					visited[l][j]=true;
+    					}
+    				}
+    			}
+    		}
+    	}
+    }
+    
+    // 74. Search a 2D Matrix
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int top=0;
+        int bottom=m-1;
+        while(top<bottom) {
+        	int mid =top + (bottom-top)/2;
+        	if(matrix[mid][0]==target) return true;
+        	else if(matrix[mid][0]>target) {
+        		bottom = mid;
+        	}else {
+        		if((mid<m-1 && matrix[mid+1][0] > target) || mid==m-1) {
+        			for(int i=0;i<n;i++) {
+        				if (matrix[mid][i]==target) return true;
+        			}
+        			return false;
+        		} else {
+        			top=mid+1;
+        		}
+        	}
+        }
+        return false;
+    }
+    
+    
     // 75. Sort Colors
     public void sortColors(int[] nums) {
     	 int low=0;
