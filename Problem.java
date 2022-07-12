@@ -778,6 +778,7 @@ public class Problem {
     }
     
     
+    
     // 75. Sort Colors
     public void sortColors(int[] nums) {
     	 int low=0;
@@ -796,5 +797,106 @@ public class Problem {
          			high=len-1;
          		}
          }
+    }
+
+    // 78. Subsets
+    public List<List<Integer>> subsets(int[] nums) {
+    	List<List<Integer>> res = new ArrayList<List<Integer>>();
+    	subsets(nums, 0, res, new ArrayList<Integer>(), nums.length );
+    	return res;
+    }
+    
+    private void subsets(int[] nums, int startIndex, List<List<Integer>> res, List<Integer> temp, int len) {
+    	if(startIndex == len) {
+    		res.add(new ArrayList(temp));
+    		return;
+    	}
+    	subsets(nums, startIndex+1, res, temp, len );
+		temp.add(nums[startIndex]);
+		subsets(nums, startIndex+1, res, temp, len );
+		temp.remove(temp.size()-1);
+    }
+
+    // 79. Word Search
+    public boolean exist(char[][] board, String word) {
+    	int m=board.length;
+    	int n=board[0].length;
+    	int len = word.length();
+    	boolean[][] visited = new boolean[m][n];
+    	for(int i=0;i<m;i++) {
+    		for(int j=0;j<n;j++) {
+    			if(board[i][j]==word.charAt(0))
+    			{
+    				visited[i][j]=true;
+    				if (!findNext(board, visited, m,n,0,len,word,i,j))
+    				{
+    					visited[i][j]=false;
+    				}else return true;
+    			}
+    		}
+    	}
+        return false;
+    }
+    
+    private boolean findNext(char[][] board, boolean[][] visited, int m, int n, int indexAt, int len, String word, int i, int j)
+    {
+    	if(indexAt==len-1) return true;
+    	indexAt++;
+    	if (i>0 && board[i-1][j]==word.charAt(indexAt) && !visited[i-1][j]) {
+    		visited[i-1][j]=true;
+			if (!findNext(board, visited, m,n,indexAt,len, word, i-1, j))
+			{
+				visited[i-1][j]=false;
+			}else return true;
+    	}
+    	
+    	if (i<m-1 && board[i+1][j]==word.charAt(indexAt) && !visited[i+1][j]) {
+    		visited[i+1][j]=true;
+			if (!findNext(board, visited, m,n,indexAt,len, word, i+1, j))
+			{
+				visited[i+1][j]=false;
+			}else return true;
+    	}
+    	
+    	if(j>0 && board[i][j-1]==word.charAt(indexAt) && !visited[i][j-1]) {
+    		visited[i][j-1]=true;
+			if (!findNext(board, visited, m,n,indexAt,len, word, i, j-1))
+			{
+				visited[i][j-1]=false;
+			}else return true;
+    	}
+    	
+    	if(j<n-1 && board[i][j+1]==word.charAt(indexAt) && !visited[i][j+1]) {
+    		visited[i][j+1]=true;
+			if (!findNext(board, visited, m,n,indexAt,len, word, i, j+1))
+			{
+				visited[i][j+1]=false;
+			}else return true;
+    	}
+    	
+    	return false;
+    }
+
+    // 80. Remove Duplicates from Sorted Array II
+    public int removeDuplicates2(int[] nums) {
+    	int counter=1;
+    	int preval=nums[0];
+    	int len=nums.length;
+    	int lowIndex=1;
+    	for(int i=1;i<len;i++) {
+    		if(nums[i]==preval) {
+    			counter++;
+    			if(counter<=2) {
+                    nums[lowIndex]=nums[i];
+    				lowIndex++;
+    			}
+    		}else {
+    			preval = nums[i];
+    			nums[lowIndex]=nums[i];
+    			counter=1;
+                lowIndex++;
+    		}
+    	}
+        return lowIndex;
     }
 }
