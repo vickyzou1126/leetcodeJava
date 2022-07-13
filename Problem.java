@@ -899,4 +899,85 @@ public class Problem {
     	}
         return lowIndex;
     }
+ 
+    // 81. Search in Rotated Sorted Array II
+    public boolean search2(int[] nums, int target) {
+    	// remove duplicate
+    	int preval=nums[0];
+    	int len=nums.length;
+    	int lowIndex=1;
+    	for(int i=1;i<len;i++) {
+    		if(nums[i]!=preval) {
+    			preval = nums[i];
+    			nums[lowIndex]=nums[i];
+                lowIndex++;
+    		}
+    	}
+        var newNums = Arrays.copyOfRange(nums, 0, lowIndex);
+        return search(newNums, target) != -1;
+    }
+    
+    // 88. Merge Sorted Array
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        if(n==0) {
+        	return;
+        }
+        
+        int index=0;
+        int mIndex=0;
+        int nIndex=0;
+
+        while(index < m+n)
+        {
+            
+        	int v1 = mIndex<m ? nums1[mIndex] : Integer.MAX_VALUE;
+        	int v2 = nIndex<n ? nums2[nIndex] : Integer.MAX_VALUE;
+        	if(v1<=v2) {
+        		nums1[index] = v1;
+        		mIndex++;
+        	} else {
+        		if(mIndex<m && index<=mIndex) {
+        			int swap = nums1[mIndex];
+        			nums1[index] = v2;
+                    mIndex++;
+                    int temp=nIndex;
+                    while(temp<n-1&& swap>nums2[temp+1]){
+                        nums2[temp]=nums2[temp+1];
+                        temp++;
+                    }
+                    if(temp<n){
+                        nums2[temp] = swap;
+                    }
+        		} else {
+        			nums1[index] = v2;
+            		nIndex++;
+        		}
+        	}
+        	index++;
+        }
+    }
+
+    // 90. Subsets II
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+    	java.util.Arrays.sort(nums);
+    	List<List<Integer>> res = new ArrayList<List<Integer>>();
+    	subsetsWithDup(nums,res, new ArrayList(),nums.length,0);
+    	return res;
+    }
+    
+    private void subsetsWithDup(int[] nums, List<List<Integer>> res, List<Integer> temp, int len, int index) {
+    	if(index == len) {
+    		if(!res.contains(temp)) {
+    			res.add(new ArrayList(temp));
+            }
+    		
+    		return;
+    	}
+    	
+    	subsetsWithDup(nums,res,temp,len,index+1);
+    	temp.add(nums[index]);
+    	subsetsWithDup(nums,res,temp,len,index+1);
+    	temp.remove(temp.size()-1);
+    }
+    
 }
