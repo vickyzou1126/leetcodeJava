@@ -980,4 +980,59 @@ public class Problem {
     	temp.remove(temp.size()-1);
     }
     
+    // 105. Construct Binary Tree from Preorder and Inorder Traversal
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+    	int len = preorder.length;
+        if(len==0) return null;
+        var node = new TreeNode(preorder[0]);
+        if(len==1) return node; 
+        var index=-1;
+        for(int i=0;i<len;i++){
+            if(inorder[i]==preorder[0]){
+                index=i;
+                break;
+            }
+        }
+        
+        node.left = buildTree(Arrays.copyOfRange(preorder, 1, index+1), Arrays.copyOfRange(inorder, 0, index));
+        node.right = buildTree(Arrays.copyOfRange(preorder, index+1, len), Arrays.copyOfRange(inorder, index+1, len));
+        return node;
+    }
+
+    // 106. Construct Binary Tree from Inorder and Postorder Traversal
+    public TreeNode buildTree2(int[] inorder, int[] postorder) {
+    	int len = inorder.length;
+        if(len==0) return null;
+        var node = new TreeNode(postorder[len-1]);
+        if(len==1) return node; 
+        var index=-1;
+        for(int i=0;i<len;i++){
+            if(inorder[i]==postorder[len-1]){
+                index=i;
+                break;
+            }
+        }
+
+        node.left = buildTree(Arrays.copyOfRange(inorder, 0, index), Arrays.copyOfRange(postorder, 0, index));
+        node.right = buildTree(Arrays.copyOfRange(inorder, index+1, len), Arrays.copyOfRange(postorder, index, len-1));
+        return node;
+    }
+
+    // 108. Convert Sorted Array to Binary Search Tree
+    public TreeNode sortedArrayToBST(int[] nums) {
+    	int len = nums.length;
+        if (len==1) return new TreeNode(nums[0]);
+        int index = len/2;
+        System.out.println("index:" + index);
+        var node = new TreeNode(nums[index]);
+        if(index > 0){
+            node.left = sortedArrayToBST(Arrays.copyOfRange(nums, 0, index));
+        }
+        
+        if(len > index+1 ){
+            node.right = sortedArrayToBST(Arrays.copyOfRange(nums, index+1, len));
+        }
+
+        return node;
+    }
 }
