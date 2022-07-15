@@ -2,6 +2,7 @@ package Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -1034,5 +1035,70 @@ public class Problem {
         }
 
         return node;
+    }
+    
+    // 118. Pascal's Triangle
+    public List<List<Integer>> generate(int numRows) {
+    	List<List<Integer>> res = new ArrayList<List<Integer>>();
+        res.add(Arrays.asList(1));
+
+        for(int i=2; i<=numRows;i++) {
+         	var last = res.get(i-2);
+         	var temp = new ArrayList<Integer>();
+         	temp.add(1);
+         	for(int j=0;j<i-2;j++) {
+         		temp.add(last.get(j)+last.get(j+1));
+         	}
+         	temp.add(1);
+         	res.add(new ArrayList(temp));
+        }
+         
+        return res;
+    }
+
+    // 119. Pascal's Triangle II
+    public List<Integer> getRow(int rowIndex) {
+    	var result = new ArrayList<Integer>();
+    	result.add(1);
+    	if (rowIndex==0) return result;
+    	List<List<Integer>> res = new ArrayList<List<Integer>>();
+        res.add(new ArrayList(result));
+
+        for(int i=2; i<=rowIndex+1;i++) {
+         	var last = res.get(i-2);
+         	result = new ArrayList<Integer>();
+         	result.add(1);
+         	for(int j=0;j<i-2;j++) {
+         		result.add(last.get(j)+last.get(j+1));
+         	}
+         	result.add(1);
+         	res.add(new ArrayList(result));
+        }
+         
+        return result;
+    }
+
+    // 120. Triangle
+    public int minimumTotal(List<List<Integer>> triangle) {
+    	int len = triangle.size();
+        int[][] dp = new int[len][len];
+        dp[0][0]=triangle.get(0).get(0);
+        
+        for(int i=1; i<len;i++) {
+        	var temp = dp[i-1];
+          
+        	var current = triangle.get(i);
+        	for(int j=0;j<=i;j++){
+        		var val1 = j>0 ? temp[j-1] : Integer.MAX_VALUE;
+        		var val2 = j<i ? temp[j] :Integer.MAX_VALUE; ;
+        		dp[i][j] = Math.min(val1, val2) + current.get(j); 
+        	}
+        }
+        
+        int min = Integer.MAX_VALUE;
+        for(int j=0;j<len;j++) {
+        	min = Math.min(min, dp[len-1][j]);
+        }
+        return min;
     }
 }
