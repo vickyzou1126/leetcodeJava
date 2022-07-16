@@ -2,7 +2,6 @@ package Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -1100,5 +1099,56 @@ public class Problem {
         	min = Math.min(min, dp[len-1][j]);
         }
         return min;
+    }
+
+    // 121. Best Time to Buy and Sell Stock
+    public int maxProfit(int[] prices) {
+        int min = Integer.MAX_VALUE;
+        int profit = 0;
+        for(int i=0;i<prices.length;i++) {
+        	min = Math.min(min, prices[i]);
+        	profit = Math.max(profit, prices[i]-min);
+        }
+        return profit;
+    }
+
+    // 122. Best Time to Buy and Sell Stock II
+    public int maxProfit2(int[] prices) {
+        int profit =0;
+        int bought = prices[0];
+        int sale=prices[0];
+
+        for(int i=1;i<prices.length;i++) {
+        	if(prices[i]<sale) {
+        		profit = profit + Math.max(0, sale - bought);
+        		bought = prices[i];
+        	}
+        	sale = prices[i];
+        }
+        
+        return profit + Math.max(0, sale - bought);
+    }
+    
+    // 128. Longest Consecutive Sequence
+    public int longestConsecutive(int[] nums) {
+    	java.util.Arrays.sort(nums);
+    	int len = nums.length;
+    	if(len<=1) return len;
+    	int preVal = nums[0];
+    	int max=1;
+    	int counter=1;
+        for(int i=1;i<len;i++) {
+        	if(preVal == nums[i]) continue;
+        	if(preVal + 1 < nums[i]) {
+        		max= Math.max(max, counter);
+        		counter=1;
+        		
+        	} else {
+        		counter++;
+        	}
+        	preVal = nums[i];
+        }
+
+        return Math.max(max, counter);
     }
 }
