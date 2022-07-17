@@ -1151,4 +1151,102 @@ public class Problem {
 
         return Math.max(max, counter);
     }
+
+    // 130. Surrounded Regions
+    public void solve(char[][] board) {
+    	int m = board.length;
+    	int n = board[0].length;
+        boolean[][] notFlipping = new boolean[m][n];
+        int counter=0;
+        boolean init=true;
+        while(init || counter>0)
+        {
+            init=false;
+            counter=0;
+            for(int i=0;i<m;i++) {
+            	for(int j=0;j<n;j++) {
+            		if(!notFlipping[i][j] && board[i][j] == 'O') {
+            			notFlipping[i][j] = (i==0 || notFlipping[i-1][j])|| (i==m-1 || notFlipping[i+1][j]) || (j==0 || notFlipping[i][j-1]) || (j==n-1 || notFlipping[i][j+1]);
+            			if(notFlipping[i][j]){
+            				counter++;
+            			}
+            		}
+            	}
+            }
+        }
+        
+        
+        for(int i=0;i<m;i++) {
+        	for(int j=n-1;j>=0;j--) {
+        		if(!notFlipping[i][j] && board[i][j] == 'O') {
+        			notFlipping[i][j] = (i==0 || notFlipping[i-1][j])|| (i==m-1 || notFlipping[i+1][j]) || (j==0 || notFlipping[i][j-1]) || (j==n-1 || notFlipping[i][j+1]);
+        		}
+        	}
+        }
+        
+       
+        
+        for(int i=m-1;i>=0;i--) {
+        	for(int j=0;j<n;j++) {
+        		if(!notFlipping[i][j] && board[i][j] == 'O') {
+        			notFlipping[i][j] = (i==0 || notFlipping[i-1][j])|| (i==m-1 || notFlipping[i+1][j]) || (j==0 || notFlipping[i][j-1]) || (j==n-1 || notFlipping[i][j+1]);
+        		}
+        	}
+        }
+        
+        
+        for(int i=m-1;i>=0;i--) {
+        	for(int j=n-1;j>=0;j--) {
+        		if(!notFlipping[i][j] && board[i][j] == 'O') {
+        			notFlipping[i][j] = (i==0 || notFlipping[i-1][j])|| (i==m-1 || notFlipping[i+1][j]) || (j==0 || notFlipping[i][j-1]) || (j==n-1 || notFlipping[i][j+1]);
+        		}
+        	}
+        }
+
+         for(int i=1;i<m-1;i++) {
+        	for(int j=1;j<n-1;j++) {
+        		if(!notFlipping[i][j] && board[i][j] == 'O') {
+        			board[i][j] = 'X';
+        		}
+        	}
+        }
+    }
+
+    // 134. Gas Station
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        if(Arrays.stream(cost).sum() > Arrays.stream(gas).sum()) return -1;
+     	for(int i=0;i<gas.length;i++) {
+             if(i==0 || ((gas[i]-cost[i])>(gas[i-1]-cost[i-1]))){
+                 if(canCompleteCircuit(gas, cost, i, i+1, gas.length, gas[i])) return i;
+             }
+     		
+     	}
+         return -1;
+     }
+     
+     private boolean canCompleteCircuit(int[] gas, int[] cost, int startIndex, int nextIndex, int len, int deposit) {
+    	 if(deposit==0) return false;
+     	 int temp=(nextIndex-1)%len;
+         int temp2=nextIndex % len;
+     	 if(cost[temp]>deposit) return false;
+         if( temp2==startIndex) return true;
+     	 return canCompleteCircuit(gas, cost, startIndex, nextIndex+1, len, deposit-cost[temp]+gas[temp2]);
+     }
+
+     // 136. Single Number
+     public int singleNumber(int[] nums) {
+    	 java.util.Arrays.sort(nums);
+    	 int preVal=nums[0];
+    	 int counter=1;
+    	 for(int i=1;i<nums.length;i++) {
+    		 if(nums[i]==preVal) {
+    			 counter++;
+    		 }else {
+    			 if(counter<2) return preVal;
+    			 counter=1;
+    			 preVal=nums[i];
+    		 }
+    	 }
+    	 return preVal;
+     }
 }
