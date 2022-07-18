@@ -1249,4 +1249,69 @@ public class Problem {
     	 }
     	 return preVal;
      }
+     
+     // 137. Single Number II
+     public int singleNumber2(int[] nums) {
+    	 java.util.Arrays.sort(nums);
+    	 int preVal=nums[0];
+    	 int counter=1;
+    	 for(int i=1;i<nums.length;i++) {
+    		 if(nums[i]==preVal) {
+    			 counter++;
+    		 }else {
+    			 if(counter<2) return preVal;
+    			 counter=1;
+    			 preVal=nums[i];
+    		 }
+    	 }
+    	 return preVal;
+     }
+
+     // 150. Evaluate Reverse Polish Notation
+     
+     // 152. Maximum Product Subarray -- to review
+     public int maxProduct(int[] nums) {
+    	 int n = nums.length;
+         if (n == 1) return nums[0];
+
+         var minArr = new int[n];
+         var maxArr = new int[n];
+
+         minArr[0] = nums[0];
+         maxArr[0] = nums[0];
+         
+         int max = nums[0];
+
+         for (int i = 1; i < n; i++)
+         {
+             maxArr[i] = Math.max(Math.max(maxArr[i - 1] * nums[i], minArr[i - 1] * nums[i]), nums[i]);
+             minArr[i] = Math.min(Math.min(maxArr[i - 1] * nums[i], minArr[i - 1] * nums[i]), nums[i]);
+             max = Math.max(max, maxArr[i]);
+         }
+
+         return max;
+     }
+
+     // 153. Find Minimum in Rotated Sorted Array
+     public int findMin(int[] nums) {
+    	 int len = nums.length;
+    	 if (len==1) return nums[0];
+         if(nums[0]<nums[len-1]) return nums[0];
+         
+         return findMin(nums,0,len-1, len);
+         
+     }
+     private int findMin(int[] nums, int left, int right, int len) {
+
+    	 int mid = left + (right-left)/2;
+    	 
+    	 if(nums[mid]>nums[0]) {
+    		 return findMin(nums, mid+1, right, len);
+    	 }else {
+    		 if((mid==0 || nums[mid-1]>nums[0]) && (mid==len-1 || nums[mid+1]>nums[mid])) return nums[mid];
+             if(left>mid-1) return nums[mid+1];
+    		 return findMin(nums, left, mid-1, len);
+    	 }
+     }
 }
+
