@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Problem {
@@ -1312,6 +1313,67 @@ public class Problem {
              if(left>mid-1) return nums[mid+1];
     		 return findMin(nums, left, mid-1, len);
     	 }
+     }
+
+     // 162. Find Peak Element
+     public int findPeakElement(int[] nums) {
+    	 int len = nums.length;
+    	 if(len==1) return 0;
+    	 int index = findPeakElement(nums, 0, (len-1)/2, len);
+    	 if(index!=-1) return index;
+    	 return findPeakElement(nums, (len-1)/2+1, len-1, len);
+     }
+     
+     private int findPeakElement(int[] nums, int startIndex, int endIndex, int len) {
+    	 if(startIndex>endIndex) return -1;
+    	 int mid = startIndex + (endIndex-startIndex)/2;
+    	 if ((mid==0 || nums[mid-1] < nums[mid]) && (mid==len-1 || nums[mid+1] < nums[mid])) return mid;
+    	 int index = findPeakElement(nums, startIndex, mid-1, len);
+    	 if(index!=-1) return index;
+    	 return findPeakElement(nums, mid+1, endIndex, len);
+     }
+
+     // 167. Two Sum II - Input Array Is Sorted
+     public int[] twoSum2(int[] numbers, int target) {
+    	 int[] res = new int[2];
+    	 int startIndex=0;
+    	 int endIndex=numbers.length-1;
+    	 while(startIndex<endIndex) {
+    		 var sum=numbers[startIndex]+numbers[endIndex];
+    		 if(sum == target) return new int[] { startIndex+1, endIndex+1 };
+    		 else if(sum<target) {
+    			 startIndex++;
+    		 }else {
+    			 endIndex--;
+    		 }
+    	 }
+    	 return res;
+     }
+
+     // 169. Majority Element
+     public int majorityElement(int[] nums) {
+    	 int len=nums.length;
+         var dictionary = new Hashtable<Integer, Integer>();
+         for(int i=0;i<len;i++) {
+        	 if(!dictionary.containsKey(nums[i])) {
+        		 dictionary.put(nums[i], 0);
+        	 }
+        	 var num = dictionary.get(nums[i])+1;
+        	 dictionary.replace(nums[i],num);
+        	 if(num>=(len/2)+1) return nums[i];
+         }
+         int majorityElement = 0;
+         int counter=0;
+         Set<Integer> setOfKeys = dictionary.keySet();
+         
+
+         for (Integer key : setOfKeys) {
+        	 if(dictionary.get(key) > counter) {
+        		 counter = dictionary.get(key);
+        		 majorityElement = key;
+        	 }
+         }
+         return majorityElement;
      }
 }
 
