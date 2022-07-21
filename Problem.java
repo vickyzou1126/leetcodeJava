@@ -1375,5 +1375,54 @@ public class Problem {
          }
          return majorityElement;
      }
+
+     // 189. Rotate Array
+    
+     // 198. House Robber
+     public int rob(int[] nums) {
+    	 int len = nums.length;
+    	 if(len==1) return nums[0];
+         int[] dp = new int[len];
+         dp[0] = nums[0];
+         dp[1] = Math.max(dp[0], nums[1]);
+         for(int i=2;i<len;i++) {
+        	 dp[i] = Math.max(dp[i-1], dp[i-2]+nums[i]);
+         }
+         return dp[len-1];
+     }
+
+     // 200. Number of Islands
+     public int numIslands(char[][] grid) {
+    	 int m=grid.length;
+    	 int n=grid[0].length;
+         int num=0;
+         for(int i=0;i<m;i++) {
+        	 for(int j=0;j<n;j++) {
+        		 if(grid[i][j]=='1') {
+        			 changeIslands(grid, i ,j,m,n);
+        			 num++;
+        		 }
+        	 }
+         }
+         return num;
+     }
+     
+     private void changeIslands(char[][] grid, int r, int c,int m, int n)
+     {
+    	 grid[r][c]='0';
+    	 for(int i=r-1;i<=r+1;i++) {
+    		 if(i<0 || i>=m || i==r) continue;
+    		 if(grid[i][c]=='1') {
+    			 changeIslands(grid, i, c, m,n);
+    		 }
+    	 }
+    	 
+    	 for(int j=c-1;j<=c+1;j++) {
+    		 if(j<0 || j>=n || j==c) continue;
+    		 if(grid[r][j]=='1') {
+    			 changeIslands(grid, r, j, m,n);
+    		 }
+    	 }
+     }
 }
 
