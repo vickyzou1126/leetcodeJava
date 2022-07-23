@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -1491,6 +1493,62 @@ public class Problem {
          }
          
          return Math.max(dp[len-2], dp2[len-1]);
+     }
+
+     // 215. Kth Largest Element in an Array
+     public int findKthLargest(int[] nums, int k) {
+    	 Queue<Integer> queue = new PriorityQueue<>(Collections.reverseOrder());
+    	 for(var v:nums) {
+    		 queue.add(v);
+    	 }
+    	 for(int i=1;i<k;i++) {
+    		 queue.poll();
+    	 }
+    	 return queue.peek();
+     }
+
+     // 216. Combination Sum III
+     public List<List<Integer>> combinationSum3(int k, int n) {
+         List<List<Integer>> res = new  ArrayList();
+         
+         combinationSum3(k, n, res, new ArrayList<>(), 1);
+         
+         return res;
+     }
+     
+     public void combinationSum3(int k, int target, List<List<Integer>> res, List<Integer> temp, int val) {
+         
+    	 int sumVal = temp.stream().mapToInt(i -> i).sum();
+         
+    	 int size = temp.size();
+         System.out.println(sumVal + "val: "+ val+ ", size: "+size);
+    	 
+    	 
+    	 if(size == k) {
+    		 if(sumVal == target) {
+    			 res.add(new ArrayList<Integer> (temp));
+    		 }
+    		 return;
+    	 }
+         if(sumVal > target || size > k || val>target || val > 9) return;
+         temp.add(val);
+    	 combinationSum3(k, target, res, temp, val+1);
+    	 temp.remove(temp.size()-1);
+         
+    	 if(val+1 <=9){
+             combinationSum3(k, target, res, temp, val+1);
+         }
+     }
+
+     // 217. Contains Duplicate
+     public boolean containsDuplicate(int[] nums) {
+         var set = new HashSet<Integer> ();
+         for(var v : nums) {
+        	 if(!set.add(v)) {
+        		 return true;
+        	 }
+         }
+         return false;
      }
 }
 
