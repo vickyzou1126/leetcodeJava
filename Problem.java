@@ -1550,5 +1550,55 @@ public class Problem {
          }
          return false;
      }
+
+	 // 219. Contains Duplicate II
+     public boolean containsNearbyDuplicate(int[] nums, int k) {
+    	 int len=nums.length;
+    	 var table =  new Hashtable<Integer, Integer>();
+    	 for(int i=0;i<len;i++) {
+    		 if(table.containsKey(nums[i])) {
+    			 if(i-table.get(nums[i])<=k) return true;
+    			 table.replace(nums[i], i);
+    		 }else {
+    			 table.putIfAbsent(nums[i],i);
+    		 }
+    	 }
+    	 return false;
+     }
+     
+     //	220. Contains Duplicate III
+
+     // 221. Maximal Square
+     
+     public int maximalSquare(char[][] matrix) {
+    	 int m = matrix.length;
+         if (m == 0) return 0;
+         var n = matrix[0].length;
+
+         var dp = new int[m][n];
+
+         var global = 0;
+
+         for (int i = 0; i < m; i++) {
+             dp[i][0] = matrix[i][0] == '1' ? 1 : 0;
+             global = Math.max(global,dp[i][0]);
+         }
+
+         for (int j = 0; j < n; j++) {
+             dp[0][j] = matrix[0][j] == '1' ? 1 : 0;
+             global = Math.max(global, dp[0][j]);
+         }
+
+         for (int i = 1; i < m; i++) {
+             for (int j = 1; j < n; j++) {
+                 if (matrix[i][j] == '1') {
+                     dp[i][j] = Math.min(dp[i - 1][j - 1], Math.min(dp[i - 1][j], dp[i][j - 1])) + 1;
+                     global = Math.max(global, dp[i][j]);
+                 }
+             }
+         }
+
+         return global * global;
+     }
 }
 
